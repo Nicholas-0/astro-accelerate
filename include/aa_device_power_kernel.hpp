@@ -11,6 +11,18 @@ namespace astroaccelerate {
   void call_kernel_GPU_simple_power_and_interbin_kernel(const dim3 &grid_size, const dim3 &block_size,
 							float2 *const d_input_complex, float *const d_output_power, float *const d_output_interbinning, const int &nTimesamples, const float &norm);
 
+  /** \brief Wrapper for GPU kernel PaI_and_SLR_GPU_kernel. */
+  void call_kernel_PaI_and_SLR_GPU_kernel(
+    const dim3 &grid_size, 
+    const dim3 &block_size,
+    const  int &smem_bytes, 
+    const  cudaStream_t &stream, 
+    float2 *const d_input_complex, 
+    float *const d_output_power, 
+    float *const d_output_interbinning,
+    size_t nTimesamples, 
+    float norm
+  );
 } // namespace astroaccelerate
   
 #endif // ASTRO_ACCELERATE_AA_DEVICE_POWER_KERNEL_HPP

@@ -453,8 +453,11 @@ namespace astroaccelerate {
     
     
     //---------> Calculate powers and interbinning
+    cudaStream_t default_stream = NULL;
     timer.Start();
-    simple_power_and_interbin( (float2 *) d_FFT_complex_output, d_frequency_power, d_frequency_interbin, t_nTimesamples, t_nDMs_per_batch);
+    //simple_power_and_interbin( (float2 *) d_FFT_complex_output, d_frequency_power, d_frequency_interbin, t_nTimesamples, t_nDMs_per_batch);
+    //simple_power_and_interbin( (float2 *) d_FFT_complex_output, d_frequency_power, d_frequency_interbin, t_nTimesamples, t_nDMs_per_batch);
+    calculate_power_interbin_and_scalloping_removal((float2 *) d_FFT_complex_output, d_frequency_power, d_frequency_interbin, t_nTimesamples, t_nDMs_per_batch, default_stream);
     timer.Stop();
     time_log.adding("PSR","power spectrum",timer.Elapsed());
     (*compute_time) = (*compute_time) + timer.Elapsed();

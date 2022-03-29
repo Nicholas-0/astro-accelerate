@@ -48,5 +48,43 @@ namespace astroaccelerate {
 	
     call_kernel_GPU_simple_power_and_interbin_kernel(gridSize,blockDim, d_input, d_power_output, d_interbin_output, nTimesamples, sqrt(nTimesamples));
   }
+  
+  
+void calculate_power_interbin_and_scalloping_removal(
+    float2 *d_input_complex, 
+    float *d_power_output, 
+    float *d_interbin_output, 
+    size_t nTimesamples, 
+    size_t nDMs,
+    cudaStream_t &stream
+){
+    int n_blocks_x, n_blocks_y;
+    
+    n_blocks_x = (nTimesamples>>1)/PAI_NTHREADS + 1;
+    n_blocks_y = nDMs;
+    int smem_bytes = 0;
+    
+    dim3 block_dim(PAI_NTHREADS, 1, 1);
+    dim3 grid_dim(n_blocks_x ,n_blocks_y , 1);
+    
+    #ifdef POWER_DEBUG
+        printf("gridSize=(%d,%d,%d)\n", gridSize.x, gridSize.y, gridSize.z);
+        printf("blockDim=(%d,%d,%d)\n", blockDim.x, blockDim.y, blockDim.z);
+    #endif
+    
+    call_kernel_PaI_and_SLR_GPU_kernel(
+        grid_dim, 
+        block_dim,
+        smem_bytes, 
+        stream, 
+        d_input_complex, 
+        d_power_output, 
+        d_interbin_output,
+        nTimesamples, 
+        sqrt(nTimesamples)
+    );
+    
+  }
+
 
 } //namespace astroaccelerate
